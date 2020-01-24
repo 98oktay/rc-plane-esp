@@ -192,6 +192,7 @@ out/
 atlassian-ide-plugin.xml
 
 # Cursive Clojure plugin
+.idea/
 .idea/replstate.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)

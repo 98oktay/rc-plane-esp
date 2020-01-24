@@ -1,0 +1,17 @@
+{
+  "name": "rc-plane-esp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "connect": "espruino --port tcp://192.168.1.103:23",
+    "restart": "espruino --port tcp://192.168.1.103:23 -e 'E.reboot()'",
+    "flash": "espruino --port tcp://192.168.1.103:23 -e 'save()' index.js --config MODULE_MINIFICATION_LEVEL=",
+    "dev": "espruino --port tcp://192.168.1.103:23 --watch ./index.js  --config MODULE_MINIFICATION_LEVEL=",
+    "dev1": "espruino --port tcp://192.168.4.1:23 --watch ./index.js  --config MODULE_MINIFICATION_LEVEL=",
+    "test": "espruino --port tcp://192.168.1.103:23 --watch ./test1/index.js  --config MODULE_MINIFICATION_LEVEL="
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
