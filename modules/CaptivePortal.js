@@ -1,7 +1,11 @@
 // Captive Portal
 
+
 var http = require('http');
-var Wifi = require('Wifi');
+
+if(!Wifi) {
+    Wifi = require('Wifi');
+}
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
 
