@@ -1,10 +1,47 @@
-const CaptivePortal = require('./modules/CaptivePortal.js');
-const Socket = require('./modules/socket.js');
+var Wifi = require('Wifi');
 
-setTimeout(CaptivePortal.start,1000);
+const mySocket = (function(){
+    const events = {};
+    function on(event, callback) {events[event] = callback;}
+    function eventTrigger(event, value) {if(events[event]) {events[event](value);}}
+    this.eventTrigger = eventTrigger;
+    this.on = on;
+    return this;
+})();
+var pingTimer = null;
+
+function initSocket() {
+    var server = require("net").createServer(function(c, err) {
+        if (err) {
+            console.log("Its all gone bad and here's why: "+err);
+            return;
+        }
+        try{
+            c.write("Hello");
+            console.log("Client Connected.");
+            if(pingTimer) clearInterval(pingTimer);
+            pingTimer = setInterval(function(){
+                c.write("PING");
+            },900);
+        }catch(e){
+            if(e.indexOf("closed") !== -1) {
+                if(pingTimer) clearInterval(pingTimer);
+            }
+        }
+        c.on('data', function(raw) {
+            try{
+                let command = JSON.parse(raw.toString());
+                if(command.event) { mySocket.eventTrigger(command.event, command.value);}
+            } catch(e){}
+        });
+        //c.end();
+    });
+    server.listen(8888);
+}
+
+
 
 var throttlePos = 0;
-
 var aileronPos = 0.5;
 var elevatorPos = 0.5;
 var rudderPos = 0.5;
@@ -17,24 +54,27 @@ function keepPWMsignals() {
 }
 
 function initEvents() {
-    Socket.on("throttle", (value)=>{
+    mySocket.on("throttle", (value)=>{
         throttlePos = (value+1)/2
     });
-    Socket.on("aileron", (value)=>{
+    mySocket.on("aileron", (value)=>{
         aileronPos = (value+1)/2
     });
-    Socket.on("elevator", (value)=>{
+    mySocket.on("elevator", (value)=>{
         elevatorPos = (value+1)/2
     });
-    Socket.on("rudder", (value)=>{
+    mySocket.on("rudder", (value)=>{
         rudderPos = (value+1)/2
     });
 }
 
 function App() {
-    Socket.init();
+    Wifi.stopAP();
+    Wifi.startAP("RC-Plane", {authMode:"open"});
+    initSocket();
     initEvents();
     setInterval(keepPWMsignals, 50);
+    console.log("started...");
 }
 
 E.on('init', App);

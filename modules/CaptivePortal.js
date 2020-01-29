@@ -1,15 +1,11 @@
 // Captive Portal
-
-
 var http = require('http');
 
-if(!Wifi) {
-    Wifi = require('Wifi');
-}
+var Wifi = require('Wifi');
 var dgram = require('dgram');
 var server = dgram.createSocket('udp4');
 
-var SSID = 'ESP32-WIFI';
+var SSID = 'RC-PLANE';
 var authMode = 'open';
 var portDNS = 53;
 
@@ -221,11 +217,11 @@ function start() {
         params:[]
     };
     //disconnectStation();
+
     wifiScan(context);
     startDNSServer(portDNS);
     startAccessPoint(SSID, authMode, null);
     startHttpServer(context);
-
 }
 
-module.exports.start = start;
+exports.start=start;
