@@ -55,16 +55,20 @@ function keepPWMsignals() {
 
 function initEvents() {
     mySocket.on("throttle", (value)=>{
-        throttlePos = (value+1)/2
+        throttlePos = value;
+        keepPWMsignals();
     });
     mySocket.on("aileron", (value)=>{
-        aileronPos = (value+1)/2
+        aileronPos = value;
+        keepPWMsignals();
     });
     mySocket.on("elevator", (value)=>{
-        elevatorPos = (value+1)/2
+        elevatorPos = value;
+        keepPWMsignals();
     });
     mySocket.on("rudder", (value)=>{
-        rudderPos = (value+1)/2
+        rudderPos = value;
+        keepPWMsignals();
     });
 }
 
@@ -73,7 +77,7 @@ function App() {
     Wifi.startAP("RC-Plane", {authMode:"open"});
     initSocket();
     initEvents();
-    setInterval(keepPWMsignals, 50);
+    setInterval(keepPWMsignals, 500);
     console.log("started...");
 }
 
